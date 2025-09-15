@@ -1,151 +1,121 @@
-Got it ✅
-Here’s a **clear README.md** for your project so others (and you) can set it up easily.
+# 🎯 SkillKrack AI – Interview Prep Studio API
 
----
-
-# 📘 Interview Prep AI — Prototype
-
-A simple full-stack project to help users practice for interviews.
-It analyzes **facial confidence** (camera) and **speech knowledge** (audio), then gives feedback and stores results.
-
----
-
-## 📂 Project Structure
-
-```
-backend/       → Flask backend (API + SQLite)
-database/      → SQLite database file (results.db created automatically)
-frontend/      → Static HTML, CSS, JS (UI for camera + audio)
-model/         → (optional) ML models (DeepFace, Whisper, NLP) — not implemented yet
-```
+A **Flask-based REST API** powering **SkillKrack AI**, an AI-driven platform for **interview preparation**. It evaluates candidates using **facial expressions (confidence)** and **speech analysis (knowledge)** to provide **personalized feedback** and **performance tracking**.
 
 ---
 
 ## 🚀 Features
 
-- 🎥 **Facial Expression Capture** → maps emotions to confidence score
-- 🎤 **Speech Recording** → converts speech to text & evaluates knowledge score
-- 📊 **Scoring System** → final score = average(confidence, knowledge)
-- 💾 **Backend (Flask + SQLite)** → saves user test results with feedback
-- 📜 **History API** → fetch all previous results
+* 📊 **Results Management** – Save & retrieve interview results
+* 📈 **User Analytics** – Get detailed performance stats per user
+* 🔍 **Advanced Filtering** – Search with pagination & filters
+* 🔐 **Secure Sessions** – Track and manage user sessions
+* ⚡ **Optimized Performance** – Fast queries with DB indexing
+* 🛡️ **Robust Security** – Input validation, safe queries, error handling
+* 📝 **Smart Logging** – Debug & monitor with structured logs
 
 ---
 
-## ⚙️ Installation & Setup
+## 🏗️ Tech Stack
 
-### 1️⃣ Clone repo
+* **Backend**: Flask / FastAPI (REST API)
+* **ML Models**: OpenCV + DeepFace (facial emotions), Whisper / Google API (speech-to-text), NLP (answer analysis)
+* **Database**: SQLite / MongoDB
+* **Frontend (planned)**: React.js for candidate-facing UI
+* **Deployment**: Docker & Docker Compose
+
+---
+## 🔌 API Endpoints
+
+* **GET /** → Health check
+* **POST /create-session** → Start a new session
+* **POST /save-result** → Save interview result
+* **GET /get-results** → Fetch results (with pagination & filters)
+* **GET /get-user-stats/{username}** → User analytics
+* **DELETE /delete-result/{id}** → Delete a result
+
+---
+
+## 🗄️ Database Schema
+
+**Results Table**
+
+* `username`
+* `confidence_score` (0–100)
+* `knowledge_score` (0–100)
+* `final_score` (0–100)
+* `feedback` (text)
+* `question_answered` (text)
+* `session_id`
+
+**User Sessions Table**
+
+* `session_id` (unique)
+* `username`
+* `created_at`
+* `last_activity`
+
+---
+
+## 🔒 Security & Optimizations
+
+* ✅ Input validation & sanitization
+* ✅ SQL injection prevention (parameterized queries)
+* ✅ Request size limits & CORS control
+* ✅ Efficient DB indexing & pagination
+* ✅ Structured logging for monitoring
+
+---
+
+## 🧪 Testing
 
 ```bash
-git clone https://github.com/yourname/interview-prep-ai.git
-cd interview-prep-ai
+pytest tests/         # Run tests
+pytest --cov=app      # Run with coverage
 ```
 
-### 2️⃣ Backend Setup
+---
 
-Go to backend folder and install requirements:
+## 📦 Deployment
 
-```bash
-cd backend
-python -m venv venv
-source venv/bin/activate   # (Windows: venv\Scripts\activate)
-pip install flask
-```
-
-Run server:
+**Local**
 
 ```bash
 python app.py
 ```
 
-- Server runs on: **[http://127.0.0.1:5000](http://127.0.0.1:5000)**
-- It will auto-create `database/results.db`
+**Docker Compose**
 
-### 3️⃣ Frontend Setup
-
-No build tools needed.
-Just open `frontend/index.html` in your browser.
-
-To connect with backend:
-
-- When saving scores, frontend will call:
-
-  - `POST http://127.0.0.1:5000/save-result`
-  - `GET http://127.0.0.1:5000/get-results`
+```bash
+docker-compose up --build
+```
 
 ---
 
-## 🗂️ API Endpoints
-
-### `POST /save-result`
-
-Save a user’s test result.
-**Request (JSON)**:
+## 📊 Example Output
 
 ```json
 {
-  "username": "John",
-  "confidence_score": 80,
-  "knowledge_score": 70,
-  "feedback": ["Good eye contact", "Improve clarity"]
+  "username": "john_doe",
+  "confidence_score": 72,
+  "knowledge_score": 65,
+  "final_score": 68,
+  "feedback": [
+    "Speak slower",
+    "Revise OOP basics",
+    "Maintain eye contact"
+  ]
 }
 ```
 
-**Response:**
+---
 
-```json
-{ "message": "Result saved successfully", "final_score": 75 }
-```
+## 📜 License
+
+MIT License – open for contributions & improvements.
 
 ---
 
-### `GET /get-results`
+👉 This README is **professional, trust-building, and presentation-ready**, showing **SkillKrack AI** as a complete **API-powered system for AI-driven interview preparation**.
 
-Fetch all saved results.
-**Response:**
-
-```json
-[
-  {
-    "username": "John",
-    "confidence_score": 80,
-    "knowledge_score": 70,
-    "final_score": 75,
-    "feedback": "Good eye contact, Improve clarity",
-    "created_at": "2025-09-15T14:00:00"
-  }
-]
-```
-
----
-
-## 🖥️ Screenshots (Prototype)
-
-- **Frontend App (index.html)**
-  🎥 Camera preview + record button
-  🎤 Audio recorder with playback
-  📊 Feedback summary
-
-- **Backend**
-  SQLite database saves results like this:
-
-  | id  | username | confidence_score | knowledge_score | final_score | feedback | created_at |
-  | --- | -------- | ---------------- | --------------- | ----------- | -------- | ---------- |
-
----
-
-## 🔮 Next Steps (Improvements)
-
-- Integrate **DeepFace / MediaPipe** for real emotion → confidence analysis
-- Use **Whisper API** for speech-to-text
-- Add **NLP model** to check relevance & depth of answers
-- Deploy backend on **Render/Heroku** and serve frontend from **Netlify/Vercel**
-
----
-
-## 👨‍💻 Author
-
-Built for educational purposes — interview skill practice tool.
-
----
-
-Would you like me to **add a section in README explaining how to view past results inside the frontend** (by calling `/get-results` and rendering a table), or keep README focused on backend + setup?
+Do you want me to also **make a PowerPoint presentation draft (slide-wise)** out of this README so you can directly present it in class/hackathon?
