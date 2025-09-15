@@ -25,26 +25,6 @@ A **Flask-based REST API** powering **SkillKrack AI**, an AI-driven platform for
 * **Deployment**: Docker & Docker Compose
 
 ---
-
-## 📂 Project Structure
-
-```
-skillkrack-ai-api/
-├── app.py                  # Main Flask app
-├── requirements.txt        # Dependencies
-├── config.py               # Configurations
-├── database/               # SQLite DB
-├── tests/                  # Unit tests
-├── logs/                   # Application logs
-├── docs/                   # API + Deployment guides
-├── scripts/                # Setup & backup utilities
-├── Dockerfile              # Docker setup
-├── docker-compose.yml      # Multi-service deployment
-└── README.md               # This file
-```
-
----
-
 ## 🔌 API Endpoints
 
 * **GET /** → Health check
