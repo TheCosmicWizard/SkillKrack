@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interview Prep AI</title>
+    <style>
+        /* Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Segoe UI", Roboto, Arial, sans-serif;
+            background: #f5f7fb;
+            color: #222;
+            line-height: 1.6;
+        }
+
+        header {
+            background: linear-gradient(135deg, #4a90e2, #0072ff);
+            color: #fff;
+            text-align: center;
+            padding: 60px 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            letter-spacing: -1px;
+        }
+
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        main {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .card {
+            background: #fff;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12);
+        }
+
+        .card h2 {
+            font-size: 1.3rem;
+            margin-bottom: 12px;
+            color: #0072ff;
+        }
+
+        video,
+        audio {
+            width: 100%;
+            border-radius: 8px;
+            margin: 10px 0;
+            background: #000;
+        }
+
+        button {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 8px;
+            background: #0072ff;
+            color: #fff;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background: #005bd1;
+        }
+
+        .feedback {
+            margin-top: 20px;
+        }
+
+        .feedback ul {
+            list-style: disc;
+            padding-left: 20px;
+            color: #333;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: #fafafa;
+            border-top: 1px solid #eee;
+            margin-top: 40px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card {
+            animation: fadeIn 0.6s ease both;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>SkillKrack AI</h1>
+        <p>Boost your confidence & knowledge before the big day</p>
+    </header>
+
+    <main>
+        <div class="card">
+            <h2>Facial Confidence Test</h2>
+            <video id="video" autoplay muted playsinline></video><br>
+            <button onclick="captureFrame()">Capture Frame</button>
+            <p id="face-score">Confidence Score: —</p>
+        </div>
+
+        <div class="card">
+            <h2>Speech Knowledge Test</h2>
+            <button onclick="startRecording()">Start Recording</button>
+            <button onclick="stopRecording()">Stop Recording</button>
+            <audio id="playback" controls></audio>
+            <p id="knowledge-score">Knowledge Score: —</p>
+        </div>
+
+        <div class="card" style="grid-column: span 2;">
+            <h2>Summary & Feedback</h2>
+            <p id="final-score"><strong>Final Score:</strong> —</p>
+            <div class="feedback">
+                <h3>Feedback</h3>
+                <ul id="feedback-list">
+                    <li>Eye contact looks good</li>
+                    <li>Improve speech clarity</li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        © 2025 Interview Prep AI — Prototype Demo
+    </footer>
+
+    <script>
+        // Camera setup
+        const video = document.getElementById('video');
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(stream => { video.srcObject = stream })
+            .catch(err => console.error('Camera error:', err));
+
+        function captureFrame() {
+            // Fake score until backend is connected
+            document.getElementById('face-score').textContent =
+                "Confidence Score: " + (70 + Math.floor(Math.random() * 30)) + "%";
+        }
+
+        // Audio recording
+        let mediaRecorder;
+        let audioChunks = [];
+        const playback = document.getElementById('playback');
+
+        async function startRecording() {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            mediaRecorder = new MediaRecorder(stream);
+            mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
+            mediaRecorder.onstop = () => {
+                const blob = new Blob(audioChunks, { type: 'audio/webm' });
+                const url = URL.createObjectURL(blob);
+                playback.src = url;
+                document.getElementById('knowledge-score').textContent =
+                    "Knowledge Score: " + (60 + Math.floor(Math.random() * 40)) + "%";
+                audioChunks = [];
+            };
+            mediaRecorder.start();
+        }
+
+        function stopRecording() {
+            if (mediaRecorder) mediaRecorder.stop();
+        }
+
+        function saveResult(username, confidence, knowledge, feedback) {
+            fetch("http://127.0.0.1:5000/save-result", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    username: username,
+                    confidence_score: confidence,
+                    knowledge_score: knowledge,
+                    feedback: feedback
+                })
+            })
+                .then(res => res.json())
+                .then(data => console.log("Saved:", data))
+                .catch(err => console.error(err));
+        }
+
+    </script>
+</body>
+
+</html>
