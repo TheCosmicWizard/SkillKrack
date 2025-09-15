@@ -4,9 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interview Prep AI</title>
+    <title>Interview Prep Studio</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/lucide.min.js"></script>
     <style>
-        /* Reset */
         * {
             margin: 0;
             padding: 0;
@@ -14,214 +14,577 @@
         }
 
         body {
-            font-family: "Segoe UI", Roboto, Arial, sans-serif;
-            background: #f5f7fb;
-            color: #222;
-            line-height: 1.6;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #f0f8ff 0%, #e6f3ff 100%);
+            min-height: 100vh;
+            padding: 1rem;
         }
 
-        header {
-            background: linear-gradient(135deg, #4a90e2, #0072ff);
-            color: #fff;
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
             text-align: center;
-            padding: 60px 20px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            margin-bottom: 2rem;
         }
 
-        header h1 {
+        .header h1 {
             font-size: 2.5rem;
-            margin-bottom: 10px;
-            letter-spacing: -1px;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
         }
 
-        header p {
-            font-size: 1.2rem;
-            opacity: 0.9;
+        .header p {
+            font-size: 1.1rem;
+            color: #6b7280;
         }
 
-        main {
-            max-width: 1000px;
-            margin: 40px auto;
-            padding: 0 20px;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem;
+            gap: 1rem;
         }
 
-        .card {
-            background: #fff;
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        .card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12);
-        }
-
-        .card h2 {
-            font-size: 1.3rem;
-            margin-bottom: 12px;
-            color: #0072ff;
-        }
-
-        video,
-        audio {
-            width: 100%;
-            border-radius: 8px;
-            margin: 10px 0;
-            background: #000;
-        }
-
-        button {
-            padding: 10px 18px;
+        .nav-tab {
+            padding: 0.75rem 1.5rem;
+            background: white;
             border: none;
-            border-radius: 8px;
-            background: #0072ff;
-            color: #fff;
-            font-size: 1rem;
+            border-radius: 0.5rem;
             cursor: pointer;
-            transition: background 0.2s;
+            font-weight: 500;
+            transition: all 0.2s;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
-        button:hover {
-            background: #005bd1;
+        .nav-tab.active {
+            background: #3b82f6;
+            color: white;
         }
 
-        .feedback {
-            margin-top: 20px;
+        .nav-tab:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
         }
 
-        .feedback ul {
-            list-style: disc;
-            padding-left: 20px;
-            color: #333;
+        .page {
+            display: none;
         }
 
-        footer {
-            text-align: center;
-            padding: 20px;
-            background: #fafafa;
-            border-top: 1px solid #eee;
-            margin-top: 40px;
-            font-size: 0.9rem;
-            color: #666;
+        .page.active {
+            display: block;
         }
 
-        /* Animations */
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
+        .grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 1.5rem;
+        }
 
-            to {
-                opacity: 1;
-                transform: translateY(0);
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
             }
         }
 
         .card {
-            animation: fadeIn 0.6s ease both;
+            background: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+        }
+
+        .video-container {
+            position: relative;
+            background: #111827;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            aspect-ratio: 16/9;
+            margin-bottom: 1rem;
+        }
+
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .recording-indicator {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: white;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .recording-dot {
+            width: 0.75rem;
+            height: 0.75rem;
+            background: #ef4444;
+            border-radius: 50%;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .mic-button {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 2.5rem;
+            height: 2.5rem;
+            border: none;
+            border-radius: 50%;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .mic-enabled {
+            background: #10b981;
+        }
+
+        .mic-disabled {
+            background: #ef4444;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-primary {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: #2563eb;
+        }
+
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+        }
+
+        .btn-danger:hover:not(:disabled) {
+            background: #dc2626;
+        }
+
+        .btn-secondary {
+            background: #6b7280;
+            color: white;
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: #4b5563;
+        }
+
+        .btn-success {
+            background: #10b981;
+            color: white;
+        }
+
+        .btn-success:hover:not(:disabled) {
+            background: #059669;
+        }
+
+        .btn-indigo {
+            background: #6366f1;
+            color: white;
+        }
+
+        .btn-indigo:hover:not(:disabled) {
+            background: #5b21b6;
+        }
+
+        .question-card {
+            margin-bottom: 1.5rem;
+        }
+
+        .question-number {
+            font-size: 0.875rem;
+            color: #6b7280;
+            margin-bottom: 1rem;
+        }
+
+        .question-text {
+            background: #eff6ff;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            font-weight: 500;
+            color: #1f2937;
+        }
+
+        .instructions ul {
+            list-style: none;
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+
+        .instructions li {
+            margin-bottom: 0.5rem;
+        }
+
+        .score-section {
+            margin-top: 1rem;
+        }
+
+        .score-item {
+            margin-bottom: 1rem;
+        }
+
+        .score-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.875rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .score-bar {
+            width: 100%;
+            height: 0.5rem;
+            background: #e5e7eb;
+            border-radius: 0.25rem;
+            overflow: hidden;
+        }
+
+        .score-fill {
+            height: 100%;
+            border-radius: 0.25rem;
+            transition: width 0.5s ease;
+        }
+
+        .score-blue {
+            background: #3b82f6;
+        }
+
+        .score-green {
+            background: #10b981;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Info page styles */
+        .info-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .info-section {
+            margin-bottom: 2rem;
+        }
+
+        .info-section h2 {
+            color: #1f2937;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #3b82f6;
+            padding-bottom: 0.5rem;
+        }
+
+        .info-section h3 {
+            color: #374151;
+            font-size: 1.2rem;
+            margin-bottom: 0.75rem;
+            margin-top: 1.5rem;
+        }
+
+        .info-section p {
+            color: #6b7280;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .feature-card {
+            background: #f8fafc;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            border-left: 4px solid #3b82f6;
+        }
+
+        .feature-card h4 {
+            color: #1f2937;
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-card p {
+            font-size: 0.875rem;
+            color: #6b7280;
         }
     </style>
 </head>
 
 <body>
-    <header>
-        <h1>SkillKrack AI</h1>
-        <p>Boost your confidence & knowledge before the big day</p>
-    </header>
-
-    <main>
-        <div class="card">
-            <h2>Facial Confidence Test</h2>
-            <video id="video" autoplay muted playsinline></video><br>
-            <button onclick="captureFrame()">Capture Frame</button>
-            <p id="face-score">Confidence Score: —</p>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>Interview Prep Studio</h1>
+            <p>Practice your interview skills with AI-powered feedback</p>
         </div>
 
-        <div class="card">
-            <h2>Speech Knowledge Test</h2>
-            <button onclick="startRecording()">Start Recording</button>
-            <button onclick="stopRecording()">Stop Recording</button>
-            <audio id="playback" controls></audio>
-            <p id="knowledge-score">Knowledge Score: —</p>
+        <!-- Navigation -->
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="showPage('practice')">Practice</button>
+            <button class="nav-tab" onclick="showPage('info')">About & Features</button>
         </div>
 
-        <div class="card" style="grid-column: span 2;">
-            <h2>Summary & Feedback</h2>
-            <p id="final-score"><strong>Final Score:</strong> —</p>
-            <div class="feedback">
-                <h3>Feedback</h3>
-                <ul id="feedback-list">
-                    <li>Eye contact looks good</li>
-                    <li>Improve speech clarity</li>
-                </ul>
+        <!-- Practice Page -->
+        <div id="practice-page" class="page active">
+            <div class="grid">
+                <!-- Video Section -->
+                <div class="card">
+                    <div class="video-container">
+                        <video id="cameraVideo" autoplay muted></video>
+                        <video id="playbackVideo" controls class="hidden"></video>
+
+                        <!-- Recording indicator -->
+                        <div id="recordingIndicator" class="recording-indicator hidden">
+                            <div class="recording-dot"></div>
+                            <span id="recordingTime">REC 00:00</span>
+                        </div>
+
+                        <!-- Mic button -->
+                        <button id="micButton" class="mic-button mic-enabled" onclick="toggleMicrophone()">
+                            <i data-lucide="mic"></i>
+                        </button>
+                    </div>
+
+                    <!-- Controls -->
+                    <div class="controls">
+                        <button id="recordButton" class="btn btn-primary" onclick="toggleRecording()">
+                            <i data-lucide="camera"></i>
+                            <span>Start Recording</span>
+                        </button>
+                        <button id="resetButton" class="btn btn-secondary hidden" onclick="resetRecording()">
+                            <i data-lucide="rotate-ccw"></i>
+                            <span>Record Again</span>
+                        </button>
+                        <button id="downloadButton" class="btn btn-success hidden" onclick="downloadVideo()">
+                            <i data-lucide="download"></i>
+                            <span>Download</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Question Panel -->
+                <div>
+                    <!-- Current Question -->
+                    <div class="card question-card">
+                        <h2 style="color: #1f2937; margin-bottom: 1rem;">Interview Question</h2>
+                        <div class="question-number" id="questionNumber">Question 1 of 5</div>
+                        <div class="question-text" id="questionText">
+                            Tell me about yourself and your background.
+                        </div>
+                        <button class="btn btn-indigo" onclick="nextQuestion()" style="width: 100%;">
+                            Next Question
+                        </button>
+                    </div>
+
+                    <!-- Instructions -->
+                    <div class="card">
+                        <h3 style="color: #1f2937; margin-bottom: 0.75rem;">Instructions</h3>
+                        <div class="instructions">
+                            <ul>
+                                <li>• Position yourself clearly in the frame</li>
+                                <li>• Maintain good eye contact with the camera</li>
+                                <li>• Speak clearly and at a moderate pace</li>
+                                <li>• Take your time to think before answering</li>
+                                <li>• Keep answers concise but comprehensive</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- AI Analysis -->
+                    <div class="card">
+                        <h3 style="color: #1f2937; margin-bottom: 0.75rem;">AI Analysis</h3>
+                        <div id="analysisPlaceholder"
+                            style="text-align: center; padding: 1rem; color: #6b7280; font-size: 0.875rem;">
+                            Complete a recording to see your confidence and knowledge scores
+                        </div>
+
+                        <div id="scoresSection" class="score-section hidden" style="opacity: 0.5;">
+                            <div class="score-item">
+                                <div class="score-header">
+                                    <span>Confidence Score</span>
+                                    <span>--/100</span>
+                                </div>
+                                <div class="score-bar">
+                                    <div class="score-fill score-blue" style="width: 0%;"></div>
+                                </div>
+                            </div>
+
+                            <div class="score-item">
+                                <div class="score-header">
+                                    <span>Knowledge Score</span>
+                                    <span>--/100</span>
+                                </div>
+                                <div class="score-bar">
+                                    <div class="score-fill score-green" style="width: 0%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </main>
 
-    <footer>
-        © 2025 Interview Prep AI — Prototype Demo
-    </footer>
+        <!-- Info Page -->
+        <div id="info-page" class="page">
+            <div class="card info-content">
+                <div class="info-section">
+                    <h2>About Interview Prep Studio</h2>
+                    <p>Interview Prep Studio is a comprehensive web application designed to help job seekers practice
+                        and improve their interview skills through realistic simulation and AI-powered feedback. Whether
+                        you're preparing for your first interview or looking to refine your skills for a career change,
+                        our platform provides the tools you need to succeed.</p>
+                </div>
 
-    <script>
-        // Camera setup
-        const video = document.getElementById('video');
-        navigator.mediaDevices.getUserMedia({ video: true })
-            .then(stream => { video.srcObject = stream })
-            .catch(err => console.error('Camera error:', err));
+                <div class="info-section">
+                    <h2>Key Features</h2>
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            <h4>Video Recording</h4>
+                            <p>Record yourself answering interview questions in high quality. Review your body language,
+                                speech patterns, and overall presentation.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4>Curated Questions</h4>
+                            <p>Practice with a carefully selected collection of common interview questions across
+                                different categories and difficulty levels.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4>Real-time Feedback</h4>
+                            <p>Get instant feedback on your confidence level, speaking pace, and content quality through
+                                our AI analysis system.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4>Progress Tracking</h4>
+                            <p>Monitor your improvement over time with detailed analytics and performance metrics.</p>
+                        </div>
+                    </div>
+                </div>
 
-        function captureFrame() {
-            // Fake score until backend is connected
-            document.getElementById('face-score').textContent =
-                "Confidence Score: " + (70 + Math.floor(Math.random() * 30)) + "%";
-        }
+                <div class="info-section">
+                    <h2>How It Works</h2>
+                    <h3>1. Setup</h3>
+                    <p>Allow camera and microphone access when prompted. Position yourself in good lighting with a clean
+                        background, similar to a real video interview setup.</p>
 
-        // Audio recording
-        let mediaRecorder;
-        let audioChunks = [];
-        const playback = document.getElementById('playback');
+                    <h3>2. Practice</h3>
+                    <p>Select from our curated list of interview questions or practice with random questions. Take your
+                        time to think through your responses before recording.</p>
 
-        async function startRecording() {
-            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-            mediaRecorder = new MediaRecorder(stream);
-            mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
-            mediaRecorder.onstop = () => {
-                const blob = new Blob(audioChunks, { type: 'audio/webm' });
-                const url = URL.createObjectURL(blob);
-                playback.src = url;
-                document.getElementById('knowledge-score').textContent =
-                    "Knowledge Score: " + (60 + Math.floor(Math.random() * 40)) + "%";
-                audioChunks = [];
-            };
-            mediaRecorder.start();
-        }
+                    <h3>3. Record</h3>
+                    <p>Click the record button and answer the question as you would in a real interview. Maintain eye
+                        contact with the camera and speak clearly.</p>
 
-        function stopRecording() {
-            if (mediaRecorder) mediaRecorder.stop();
-        }
+                    <h3>4. Review</h3>
+                    <p>Watch your recording and analyze your performance. Pay attention to your body language, speech
+                        clarity, and answer structure.</p>
 
-        function saveResult(username, confidence, knowledge, feedback) {
-            fetch("http://127.0.0.1:5000/save-result", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    username: username,
-                    confidence_score: confidence,
-                    knowledge_score: knowledge,
-                    feedback: feedback
-                })
-            })
-                .then(res => res.json())
-                .then(data => console.log("Saved:", data))
-                .catch(err => console.error(err));
-        }
+                    <h3>5. Improve</h3>
+                    <p>Use the AI feedback to identify areas for improvement and practice again with the same or
+                        different questions.</p>
+                </div>
 
-    </script>
+                <div class="info-section">
+                    <h2>Best Practices</h2>
+                    <p><strong>Technical Setup:</strong> Ensure stable internet connection, good lighting (face the
+                        light source), and minimal background noise.</p>
+
+                    <p><strong>Body Language:</strong> Sit up straight, maintain good posture, and make regular eye
+                        contact with the camera. Use natural hand gestures to emphasize points.</p>
+
+                    <p><strong>Content Structure:</strong> Use the STAR method (Situation, Task, Action, Result) for
+                        behavioral questions. Keep answers concise but comprehensive, typically 1-2 minutes per
+                        response.</p>
+
+                    <p><strong>Practice Routine:</strong> Regular practice sessions of 15-30 minutes are more effective
+                        than longer, infrequent sessions. Focus on one area of improvement per session.</p>
+                </div>
+
+                <div class="info-section">
+                    <h2>AI Analysis Features</h2>
+                    <p>Our AI system analyzes multiple aspects of your interview performance:</p>
+
+                    <h3>Confidence Scoring</h3>
+                    <p>Measures vocal clarity, pace consistency, and overall presentation confidence based on speech
+                        patterns and delivery.</p>
+
+                    <h3>Content Analysis</h3>
+                    <p>Evaluates the relevance and structure of your answers, identifying key strengths and areas for
+                        improvement in your responses.</p>
+
+                    <h3>Communication Skills</h3>
+                    <p>Assesses factors like speaking pace, filler words usage, and clarity of expression to help you
+                        communicate more effectively.</p>
+                </div>
+
+                <div class="info-section">
+                    <h2>Privacy & Security</h2>
+                    <p>Your privacy is our priority. All recordings are processed locally in your browser and are not
+                        uploaded to our servers unless you choose to save them. You have full control over your data and
+                        can delete recordings at any time.</p>
+
+                    <p>The AI analysis runs locally to ensure your interview practice remains completely private and
+                        secure.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 </body>
 
 </html>
